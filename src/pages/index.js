@@ -1,122 +1,104 @@
-import * as React from "react"
-import { Link } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
+import { css } from '@emotion/react'
+import React, {  useState } from 'react'
+import { Div, Row, Spacer, Typography, Container, Button } from '../../uixlibrary/components/exports/components'
 
-import Layout from "../components/layout"
-import Seo from "../components/seo"
-import * as styles from "../components/index.module.css"
+import { LayoutScreen } from "../components/layouts/LayoutScreen"
+import Header from '../components/ui/molecules/Header'
+import SectionCard from '../components/ui/SectionCard'
+import useGetAllProducts from '../hooks/useGetAllProducts'
+import useHome from '../hooks/useHome'
+import { useTheme } from '../../uixlibrary/hooks/useTheme'
+import Play from '../components/ui/atoms/icons/Play'
+import Modal from '../components/ui/molecules/Modal'
+import { Link } from 'gatsby'
 
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-  },
-  {
-    text: "Examples",
-    url: "https://github.com/gatsbyjs/gatsby/tree/master/examples",
-    description:
-      "A collection of websites ranging from very basic to complex/complete that illustrate how to accomplish specific tasks within your Gatsby sites.",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Learn how to add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-  },
-]
 
-const samplePageLinks = [
-  {
-    text: "Page 2",
-    url: "page-2",
-    badge: false,
-    description:
-      "A simple example of linking to another page within a Gatsby site",
-  },
-  { text: "TypeScript", url: "using-typescript" },
-  { text: "Server Side Rendering", url: "using-ssr" },
-  { text: "Deferred Static Generation", url: "using-dsg" },
-]
 
-const moreLinks = [
-  { text: "Join us on Discord", url: "https://gatsby.dev/discord" },
-  {
-    text: "Documentation",
-    url: "https://gatsbyjs.com/docs/",
-  },
-  {
-    text: "Starters",
-    url: "https://gatsbyjs.com/starters/",
-  },
-  {
-    text: "Showcase",
-    url: "https://gatsbyjs.com/showcase/",
-  },
-  {
-    text: "Contributing",
-    url: "https://www.gatsbyjs.com/contributing/",
-  },
-  { text: "Issues", url: "https://github.com/gatsbyjs/gatsby/issues" },
-]
 
-const utmParameters = `?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter`
+const IndexPage = ({...props }) =>{
+  
+  const theme = useTheme();
+  const products = useGetAllProducts();
+  const home = useHome();
 
-const IndexPage = () => (
-  <Layout>
-    <Seo title="Home" />
-    <div className={styles.textCenter}>
-      <StaticImage
-        src="../images/example.png"
-        loading="eager"
-        width={64}
-        quality={95}
-        formats={["auto", "webp", "avif"]}
-        alt=""
-        style={{ marginBottom: `var(--space-3)` }}
-      />
-      <h1>
-        Welcome to <b>Gatsby!</b>
-      </h1>
-      <p className={styles.intro}>
-        <b>Example pages:</b>{" "}
-        {samplePageLinks.map((link, i) => (
-          <React.Fragment key={link.url}>
-            <Link to={link.url}>{link.text}</Link>
-            {i !== samplePageLinks.length - 1 && <> · </>}
-          </React.Fragment>
-        ))}
-        <br />
-        Edit <code>src/pages/index.js</code> to update this page.
-      </p>
-    </div>
-    <ul className={styles.list}>
-      {links.map(link => (
-        <li key={link.url} className={styles.listItem}>
-          <a
-            className={styles.listItemLink}
-            href={`${link.url}${utmParameters}`}
-          >
-            {link.text} ↗
-          </a>
-          <p className={styles.listItemDescription}>{link.description}</p>
-        </li>
-      ))}
-    </ul>
-    {moreLinks.map((link, i) => (
-      <React.Fragment key={link.url}>
-        <a href={`${link.url}${utmParameters}`}>{link.text}</a>
-        {i !== moreLinks.length - 1 && <> · </>}
-      </React.Fragment>
-    ))}
-  </Layout>
-)
+  const [stateModal, setStateModal] = useState(false)
 
+
+  return(
+    <LayoutScreen title='MarineFlaming | Home' descripcion={'Encuentra todos nuestros productos como jaulas para cultivo de peces en lagos, lagunas y ríos'}>
+      <Header />
+      <Spacer y={24}/>
+
+      <SectionCard badge='Productos' title='Los mejores productos' data={products} type='fabricacion'/>
+      <Spacer y={5}/>
+      <Link to='/productos' css={css`margin: 0 auto;`}><Button css={css`margin:0 auto`} variant='solid' enableElevation color='primary'>Ver Productos</Button></Link>
+      <Spacer y={24}/>
+      <Row as='section' flex bk={{ background:'#f2f6f7',md:{flexWrap:'nowrap'} }} justify='center' align={'center'} gap={2} wrap='wrap'>     
+        <Container pd={10} bk={{ display:'flex',justifyContent:'flex-end',alignItems:'center',maxWidth:'800px',md:{width:'50%'} }} >          
+          <Row wrap='wrap' bk={{width:'100%', md:{width:'80%'} }} >
+            <Typography  color='primary' fw='title' variant='base' bk={{ width:'100%' }}>Nosotros</Typography>
+            <Spacer y={5} />
+            <Typography capitalize variant='h2' fw='title' component='h3' align='left' bk={{ width:'100%' }}>{home.nosotros.titulo}</Typography>
+            <Spacer y={5} />
+            <Typography variant='base' component='p' align='left' fw='tiny'  bk={{paddingRight:'0px', width:'100%' , md:{paddingRight:'00px'}}}>{home.nosotros.descripcion}</Typography>
+            <Spacer y={5} />
+            <Typography capitalize variant='h2' fw='title' component='h3' align='left' bk={{ width:'100%' }}>{home.nosotros.titulo2}</Typography>
+            <Spacer y={5} />
+            <Typography variant='base' component='p' align='left' fw='tiny' bk={{paddingRight:'0px', width:'100%' , md:{paddingRight:'00px'}}}>{home.nosotros.descripcion2}</Typography>
+
+          </Row>
+        </Container>
+        <Row bk={{ display:'none', width:'50%',minHeight:'550px', md:{display:'flex'} }}>
+          <img css={css`height:100%; min-height:550px`} src={home.nosotros.imagen.sourceUrl}/>
+        </Row>
+        <Div onClick={() => setStateModal(true)} css={css`
+        cursor:pointer;
+        &:before {
+          content:'';
+          width:80px;
+          height:80px;
+          position:absolute;
+          border-radius:50%;
+          animation-name:expanding;
+          animation-duration:1s;
+          animation-iteration-count:infinite;
+          animation-timing-function: ease;
+          background:${theme.palette.primary.main}1A;
+        }
+        `} borderRadius='circle' bk={{zIndex:'2',overflow:'visible',marginBottom:'40px', border:'0',width:'80px', height:'80px', background:`${theme.palette.primary.main}`,display:'flex',justifyContent:'center',alignItems:'center',md:{position:'absolute', margin:'0'} }}>
+          <Play />
+        
+        </Div>
+        
+     
+      </Row>
+      <Spacer y={24}/>
+      <SectionCard badge='Servicios' title='Brindamos servicios de Calidad' data={products} type='servicio'/>
+     
+      <Row as='section' flex bk={{ background:'#f2f6f7',md:{flexWrap:'nowrap'} }} justify='center' align={'center'} gap={2} wrap='wrap'>     
+        <Container pd={10} bk={{ display:'flex',justifyContent:'flex-end',alignItems:'center',maxWidth:'800px',md:{width:'50%'} }} >          
+          <Row  bk={{width:'100%', md:{width:'80%'} }} wrap='wrap' >
+            <Typography  color='primary' fw='title' variant='base' bk={{ width:'100%' }}>Experiencia</Typography>
+            <Spacer y={5} />
+            <Typography capitalize variant='h2' fw='title' component='h3' align='left' bk={{ width:'100%' }}>{home.productos.titulo}</Typography>
+            <Spacer y={5} />
+            <Typography variant='base' component='p' align='left' fw='tiny'  bk={{paddingRight:'0px', width:'100%' }}>{home.nosotros.descripcion}</Typography>
+            <Spacer y={5} />  
+          </Row>
+        </Container>
+        <Row bk={{ background:'#fff',display:'none', width:'50%',minHeight:'550px', md:{display:'flex'} }}>
+          <img css={css`height:100%; min-height:550px;filter: brightness(86%) contrast(144%) hue-rotate(152deg) saturate(117%) sepia(20%) invert(9%) ;`} src={home.productos.imagen.sourceUrl} alt='jaulas-hpde'/>
+        </Row>      
+  
+     
+      </Row>
+      <Spacer y={24}/>
+      
+      <Modal state={stateModal} setState={setStateModal}>
+      <iframe width="560" height="650" src="https://www.youtube.com/embed/I7IMFoVsBSw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </Modal>
+    </LayoutScreen>      
+   
+  )
+}
 export default IndexPage
